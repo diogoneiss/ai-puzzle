@@ -27,9 +27,8 @@ public class BFS extends SearchAlgorithm {
             history.store(currentState);
 
             // If this state is the goal state, return the grid
-            if (this.isGoal(currentState.getGrid())) {
-                System.out.println("Found solution!");
-                currentState.getGrid().display();
+            // uses the distance to solution as a heuristic
+            if (this.isGoal(currentState)) {
                 return Optional.of(currentState);
             }
 
@@ -39,14 +38,13 @@ public class BFS extends SearchAlgorithm {
                 var currentGrid = currentState.getGrid();
                 Grid newGrid = Grid.move(currentGrid, direction);
 
-
-
                 if (!visitedOrFrontier.contains(newGrid.hash)) {
                     PuzzleState newState = new PuzzleState(currentState, newGrid, direction);
                     queue.add(newState);
                     visitedOrFrontier.add(newGrid.hash);
                     visitedGrids.add(newGrid);
                 }
+                /*
                 else {
                     var indice = new ArrayList<>(visitedOrFrontier).indexOf(newGrid.hash);
 
@@ -57,12 +55,12 @@ public class BFS extends SearchAlgorithm {
                     System.out.printf("Colisão! Comparando a grid \n%s com \n%s\n", original, newGrid);
                     System.out.println("__________");
 
-                }
+                }*/
 
             }
         }
 
-        return Optional.empty();  // Return null if no solution is found
+        return Optional.empty();
     }
 
 

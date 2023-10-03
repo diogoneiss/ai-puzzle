@@ -10,23 +10,24 @@ public class PuzzleHistory {
         history.add(state);
     }
 
-    public void printGrids(){
-        for(int i=0;i<history.size(); i++){
+    public void printGrids() {
+        for (int i = 0; i < history.size(); i++) {
             var current = history.get(i);
             var lastMovement = "None";
             var movements = current.getPreviousMovements();
-            if(!movements.isEmpty()){
-                lastMovement = movements.get(movements.size()-1).toString();
+            if (!movements.isEmpty()) {
+                lastMovement = movements.get(movements.size() - 1).toString();
             }
-            System.out.printf("Grid %d. Movement: %s\n", i, lastMovement );
+            System.out.printf("Grid %d. Movement: %s\n", i, lastMovement);
             current.getGrid().display();
 
         }
     }
-    public String formatMovements(){
+
+    public String formatMovements() {
         StringBuilder movementList = new StringBuilder();
 
-        for(var movements : this.getMovements() ){
+        for (var movements : this.getMovements()) {
             movementList.append(movements).append(" ");
         }
 
@@ -43,8 +44,8 @@ public class PuzzleHistory {
         var startingGrid = history.get(0).getGrid();
         var gridEvolution = new ArrayList<Grid>();
         gridEvolution.add(startingGrid);
-        for(var movement: moves){
-            var last = gridEvolution.get(gridEvolution.size()-1);
+        for (var movement : moves) {
+            var last = gridEvolution.get(gridEvolution.size() - 1);
             var nextMove = Grid.move(last, movement);
             gridEvolution.add(nextMove);
         }
@@ -55,7 +56,7 @@ public class PuzzleHistory {
     public void printSolutionPath() throws Exception {
         var solutionPath = this.getSolutionPath();
         //System.out.println("Solution path: ");
-        for(var grid: solutionPath){
+        for (var grid : solutionPath) {
             grid.display();
         }
         System.out.println("______________________");
@@ -66,7 +67,12 @@ public class PuzzleHistory {
     }
 
     public PuzzleState getLastState() {
-        return history.get(history.size() - 1);
+        var index = history.size() - 1;
+        if (index < 0) {
+            System.out.println("Alerta! Index menor que zero");
+            index = 0;
+        }
+        return history.get(index);
     }
 
 

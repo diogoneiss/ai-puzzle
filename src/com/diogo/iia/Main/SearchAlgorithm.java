@@ -6,6 +6,7 @@ public abstract class SearchAlgorithm {
     protected PuzzleHistory history;
 
     protected PuzzleState initialStart;
+
     public SearchAlgorithm(Grid start) {
         this.history = new PuzzleHistory();
         this.initialStart = new PuzzleState(start);
@@ -22,7 +23,11 @@ public abstract class SearchAlgorithm {
     public abstract Optional<PuzzleState> solve() throws Exception;
 
     // Check if the grid is the goal state
-    protected boolean isGoal(Grid candidateGrid) {
+    protected boolean isGoal(PuzzleState current) {
+
+        return current.getDistanceToSolution() == 0;
+
+        /*
         int[][] goal = {
                 {1, 2, 3},
                 {4, 5, 6},
@@ -37,13 +42,12 @@ public abstract class SearchAlgorithm {
                 }
             }
         }
-        return true;
+        return true;*/
     }
 
 
-
     public void showRunInfo() throws Exception {
-        var solution = this.solve();
+
         System.out.println("Starting grid: ");
 
         this.initialStart.getGrid().display();
@@ -56,7 +60,7 @@ public abstract class SearchAlgorithm {
         System.out.println(this.history.getMovements().size());
         //System.out.println("All grids: ");
         //this.history.printGrids();
-       this.history.printSolutionPath();
+        this.history.printSolutionPath();
 
     }
 }

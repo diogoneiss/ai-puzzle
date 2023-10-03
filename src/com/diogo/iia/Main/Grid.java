@@ -194,5 +194,16 @@ public class Grid {
         return gridString.toString().hashCode();
     }
 
+    public List<Grid> getNeighbors() throws Exception {
+        var neighbors = new ArrayList<Grid>();
+        for (Grid.Direction direction : this.possibleSwaps()) {
+
+            Grid newGrid = Grid.move(this, direction);
+            neighbors.add(newGrid);
+
+        }
+        return neighbors;
+    }
+
 
 }
