@@ -12,13 +12,6 @@ public class Grid {
         return blankX == grid1.blankX && blankY == grid1.blankY && hash == grid1.hash && Arrays.equals(grid, grid1.grid);
     }
 
-    @Override
-    public int hashCode() {
-        int result = Objects.hash(blankX, blankY, hash);
-        result = 31 * result + Arrays.hashCode(grid);
-        return result;
-    }
-
     private int[][] grid;
     private int blankX, blankY;
     public int hash;
@@ -126,6 +119,9 @@ public class Grid {
         swappedGrid.blankX = newBlankX;
         swappedGrid.blankY = newBlankY;
 
+        // recalculate hash
+        swappedGrid.hash = swappedGrid.computeGridHash();
+
         return swappedGrid;
     }
 
@@ -141,8 +137,20 @@ public class Grid {
     }
 
     // Display method to print the current state of the puzzle
-    public void display() {
-        System.out.println(this);
+    public void display()
+    {
+        StringBuilder renderedGrid = new StringBuilder();
+        for (int i = 0; i < 3; i++) {
+            for (int j = 0; j < 3; j++) {
+                if (i == blankX && j == blankY) {
+                    renderedGrid.append("  ");
+                } else {
+                    renderedGrid.append(grid[i][j]).append(" ");
+                }
+            }
+            renderedGrid.append("\n");
+        }
+        System.out.println(renderedGrid);
     }
     @Override
     public String toString() {
@@ -150,12 +158,11 @@ public class Grid {
         for (int i = 0; i < 3; i++) {
             for (int j = 0; j < 3; j++) {
                 if (i == blankX && j == blankY) {
-                   renderedGrid.append("  ");
+                   renderedGrid.append("_");
                 } else {
-                    renderedGrid.append(grid[i][j]).append(" ");
+                    renderedGrid.append(grid[i][j]);
                 }
             }
-            renderedGrid.append("\n");
         }
         return renderedGrid.toString();
 
@@ -166,16 +173,25 @@ public class Grid {
         }
     }
 
+    @Override
+    public int hashCode() {
+        return this.computeGridHash();
+    }
     public int computeGridHash() {
         StringBuilder gridString = new StringBuilder(9);
 
         for (int i = 0; i < 3; i++) {
             for (int j = 0; j < 3; j++) {
-                gridString.append(grid[i][j]);
+                if (grid[i][j] == 0) {
+                    gridString.append('-');
+                } else {
+                    gridString.append(grid[i][j]);
+                }
             }
         }
 
         return gridString.toString().hashCode();
     }
+
 
 }

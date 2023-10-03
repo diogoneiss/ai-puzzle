@@ -1,3 +1,4 @@
+import java.util.List;
 import java.util.Optional;
 
 public abstract class SearchAlgorithm {
@@ -38,6 +39,8 @@ public abstract class SearchAlgorithm {
         return true;
     }
 
+
+
     public void showRunInfo() throws Exception {
         var solution = this.solve();
         System.out.println("Starting grid: ");
@@ -48,11 +51,10 @@ public abstract class SearchAlgorithm {
         System.out.printf("Solution took %d steps.\n", historySteps.size());
 
 
-        System.out.printf("Steps taken in final solution: %s \n", this.history.formatMovements());
-        System.out.println("All grids: ");
-        this.history.printGrids();
-        System.out.println("Finished grid: ");
-        this.history.getLastState().getGrid().display();
+        System.out.printf("Steps taken in solution: %s \n", this.history.formatMovements());
+        //System.out.println("All grids: ");
+        //this.history.printGrids();
+       this.history.printSolutionPath();
 
     }
 }

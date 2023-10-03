@@ -31,6 +31,30 @@ public class PuzzleHistory {
         return movementList.toString();
     }
 
+    public List<Grid> getSolutionPath() throws Exception {
+
+        var moves = this.getLastState().getPreviousMovements();
+        var startingGrid = history.get(0).getGrid();
+        var gridEvolution = new ArrayList<Grid>();
+        gridEvolution.add(startingGrid);
+        for(var movement: moves){
+            var last = gridEvolution.get(gridEvolution.size()-1);
+            var nextMove = Grid.move(last, movement);
+            gridEvolution.add(nextMove);
+        }
+
+        return gridEvolution;
+    }
+
+    public void printSolutionPath() throws Exception {
+        var solutionPath = this.getSolutionPath();
+        System.out.println("Solution path: ");
+        for(var grid: solutionPath){
+            grid.display();
+        }
+        System.out.println("______________________");
+    }
+
     public List<PuzzleState> getHistory() {
         return history;
     }

@@ -10,8 +10,7 @@ public class BFS extends SearchAlgorithm {
     @Override
     public Optional<PuzzleState> solve() throws Exception {
         Set<Integer> visitedOrFrontier = new HashSet<>();
-        List<String> visitedGrids = new ArrayList<>();
-        List<Grid> visitedGridMatrix = new ArrayList<>();
+        List<Grid> visitedGrids = new ArrayList<>();
 
         Queue<PuzzleState> queue = new LinkedList<>();
 
@@ -21,8 +20,7 @@ public class BFS extends SearchAlgorithm {
             PuzzleState currentState = queue.poll();
             history.store(currentState);
 
-            visitedGrids.add(currentState.getGrid().toString());
-            visitedGridMatrix.add(currentState.getGrid());
+            visitedGrids.add(currentState.getGrid());
             // If this state is the goal state, return the grid
             if (this.isGoal(currentState.getGrid())) {
                 System.out.println("Found solution!");
@@ -42,14 +40,16 @@ public class BFS extends SearchAlgorithm {
                     PuzzleState newState = new PuzzleState(currentState, newGrid, direction);
                     queue.add(newState);
                     visitedOrFrontier.add(newGrid.hash);
+                    visitedGrids.add(newGrid);
                 }
                 else {
                     var indice = new ArrayList<>(visitedOrFrontier).indexOf(newGrid.hash);
-                    var originalString = visitedGrids.get(indice);
-                    var original = visitedGridMatrix.get(indice);
+
+                    var original = visitedGrids.get(indice);
 
                     System.out.println("__________");
-                    System.out.printf("Já na busca! Comparando a grid \n%s\n com \n%s\n", originalString, newGrid );
+                    System.out.printf("Hash a: \t%d e b: \t%d\n", newGrid.hash, visitedGrids.get(indice).hash);
+                    System.out.printf("Colisão! Comparando a grid \n%s com \n%s\n", original.toString(), newGrid);
                     System.out.println("__________");
 
                 }
