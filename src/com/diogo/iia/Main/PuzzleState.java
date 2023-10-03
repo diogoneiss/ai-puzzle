@@ -1,3 +1,5 @@
+package com.diogo.iia.Main;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -20,7 +22,7 @@ public class PuzzleState {
         this.distanceToSolution = computeDistanceToSolution();
     }
 
-    // Constructor with previous PuzzleState, grid, and direction
+    // Constructor with previous com.diogo.iia.Main.PuzzleState, grid, and direction
     public PuzzleState(PuzzleState prevState, Grid newGrid, Grid.Direction direction) {
         this.grid = newGrid;
         this.possibleMovements = this.calculatePossibleMovements();

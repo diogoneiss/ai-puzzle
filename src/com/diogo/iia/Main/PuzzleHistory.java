@@ -1,3 +1,5 @@
+package com.diogo.iia.Main;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -24,11 +26,15 @@ public class PuzzleHistory {
     public String formatMovements(){
         StringBuilder movementList = new StringBuilder();
 
-        for(var movements : this.getLastState().getPreviousMovements()){
+        for(var movements : this.getMovements() ){
             movementList.append(movements).append(" ");
         }
 
         return movementList.toString();
+    }
+
+    public List<Grid.Direction> getMovements() {
+        return this.getLastState().getPreviousMovements();
     }
 
     public List<Grid> getSolutionPath() throws Exception {
@@ -48,7 +54,7 @@ public class PuzzleHistory {
 
     public void printSolutionPath() throws Exception {
         var solutionPath = this.getSolutionPath();
-        System.out.println("Solution path: ");
+        //System.out.println("Solution path: ");
         for(var grid: solutionPath){
             grid.display();
         }

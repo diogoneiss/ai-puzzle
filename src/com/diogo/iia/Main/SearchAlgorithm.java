@@ -1,4 +1,5 @@
-import java.util.List;
+package com.diogo.iia.Main;
+
 import java.util.Optional;
 
 public abstract class SearchAlgorithm {
@@ -52,6 +53,7 @@ public abstract class SearchAlgorithm {
 
 
         System.out.printf("Steps taken in solution: %s \n", this.history.formatMovements());
+        System.out.println(this.history.getMovements().size());
         //System.out.println("All grids: ");
         //this.history.printGrids();
        this.history.printSolutionPath();

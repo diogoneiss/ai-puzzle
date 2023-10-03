@@ -1,3 +1,9 @@
+package com.diogo.iia.Heuristics;
+
+import com.diogo.iia.Main.Grid;
+import com.diogo.iia.Main.PuzzleState;
+import com.diogo.iia.Main.SearchAlgorithm;
+
 import java.util.*;
 
 
@@ -10,7 +16,7 @@ public class BFS extends SearchAlgorithm {
     @Override
     public Optional<PuzzleState> solve() throws Exception {
         Set<Integer> visitedOrFrontier = new HashSet<>();
-        List<Grid> visitedGrids = new ArrayList<>();
+        Set<Grid> visitedGrids = new HashSet<>();
 
         Queue<PuzzleState> queue = new LinkedList<>();
 
@@ -20,7 +26,6 @@ public class BFS extends SearchAlgorithm {
             PuzzleState currentState = queue.poll();
             history.store(currentState);
 
-            visitedGrids.add(currentState.getGrid());
             // If this state is the goal state, return the grid
             if (this.isGoal(currentState.getGrid())) {
                 System.out.println("Found solution!");
@@ -45,11 +50,11 @@ public class BFS extends SearchAlgorithm {
                 else {
                     var indice = new ArrayList<>(visitedOrFrontier).indexOf(newGrid.hash);
 
-                    var original = visitedGrids.get(indice);
+                    var original = new ArrayList<>(visitedGrids).get(indice);
 
                     System.out.println("__________");
-                    System.out.printf("Hash a: \t%d e b: \t%d\n", newGrid.hash, visitedGrids.get(indice).hash);
-                    System.out.printf("Colisão! Comparando a grid \n%s com \n%s\n", original.toString(), newGrid);
+                    System.out.printf("Hash a: \t%d e b: \t%d\n", newGrid.hash, original.hash);
+                    System.out.printf("Colisão! Comparando a grid \n%s com \n%s\n", original, newGrid);
                     System.out.println("__________");
 
                 }
