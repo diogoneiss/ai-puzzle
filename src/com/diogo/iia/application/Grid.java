@@ -1,5 +1,8 @@
 package com.diogo.iia.application;
 
+import com.diogo.iia.models.Direction;
+import com.diogo.iia.models.Position;
+
 import java.util.*;
 
 public class Grid {
@@ -232,7 +235,7 @@ public class Grid {
 
     public List<Grid> getNeighbors() throws Exception {
         var neighbors = new ArrayList<Grid>();
-        for (Grid.Direction direction : this.possibleSwaps()) {
+        for (Direction direction : this.possibleSwaps()) {
 
             Grid newGrid = Grid.move(this, direction);
             neighbors.add(newGrid);
@@ -248,19 +251,12 @@ public class Grid {
     }
 
     public int findCorrectXPosition(int value) {
-        return findPosition(value).x;
+        return findPosition(value).x();
     }
 
     public int findCorrectYPosition(int value) {
-        return findPosition(value).y;
+        return findPosition(value).y();
 
-    }
-
-    public enum Direction {
-        UP, DOWN, LEFT, RIGHT
-    }
-
-    public record Position(int x, int y) {
     }
 
 

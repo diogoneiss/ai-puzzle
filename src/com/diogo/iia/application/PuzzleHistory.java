@@ -1,5 +1,7 @@
 package com.diogo.iia.application;
 
+import com.diogo.iia.models.Direction;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -34,7 +36,7 @@ public class PuzzleHistory {
         return movementList.toString();
     }
 
-    public List<Grid.Direction> getMovements() {
+    public List<Direction> getMovements() {
         return this.getLastState().getPreviousMovements();
     }
 

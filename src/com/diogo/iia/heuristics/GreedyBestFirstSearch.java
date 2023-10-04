@@ -1,6 +1,8 @@
 package com.diogo.iia.heuristics;
 
 import com.diogo.iia.application.*;
+import com.diogo.iia.models.Direction;
+import com.diogo.iia.models.DistanceHeuristics;
 
 import java.util.*;
 
@@ -22,7 +24,7 @@ public class GreedyBestFirstSearch extends SearchAlgorithm {
         if (useCost) {
             comparator = Comparator.comparingInt(PuzzleState::getCost);
         } else {
-            comparator = Comparator.comparingInt(ps -> ps.calculateDistanceHeuristic(PuzzleState.DistanceHeuristics.MANHATTAN));
+            comparator = Comparator.comparingInt(ps -> ps.calculateDistanceHeuristic(DistanceHeuristics.MANHATTAN));
         }
 
         PriorityQueue<PuzzleState> priorityQueue = new PriorityQueue<>(comparator);
@@ -47,7 +49,7 @@ public class GreedyBestFirstSearch extends SearchAlgorithm {
 
             for (int i = 0; i < neighbors.size(); i++) {
                 Grid newNeighbor = neighbors.get(i);
-                Grid.Direction direction = directions.get(i);
+                Direction direction = directions.get(i);
                 if (!visitedGrids.contains(newNeighbor)) {
                     var newState = new PuzzleState(currentState, newNeighbor, direction);
                     priorityQueue.add(newState);

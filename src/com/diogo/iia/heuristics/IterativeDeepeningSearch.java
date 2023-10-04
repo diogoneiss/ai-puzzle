@@ -3,6 +3,7 @@ package com.diogo.iia.heuristics;
 import com.diogo.iia.application.Grid;
 import com.diogo.iia.application.PuzzleState;
 import com.diogo.iia.application.SearchAlgorithm;
+import com.diogo.iia.models.Direction;
 
 import java.util.*;
 
@@ -15,8 +16,9 @@ public class IterativeDeepeningSearch extends SearchAlgorithm {
     @Override
     public Optional<PuzzleState> solve() throws Exception {
         int depth = 0;
-        while (true) {
-            Stack<PuzzleState> stack = new Stack<>();
+        int MAX_DEPTH = 100_000_000;
+        while (depth < MAX_DEPTH) {
+            Deque<PuzzleState> stack = new ArrayDeque<>();
             Set<Grid> visitedGrids = new HashSet<>();
 
             stack.push(initialStart);
@@ -37,7 +39,7 @@ public class IterativeDeepeningSearch extends SearchAlgorithm {
 
                     for (int i = 0; i < neighbors.size(); i++) {
                         Grid newNeighbor = neighbors.get(i);
-                        Grid.Direction direction = directions.get(i);
+                        Direction direction = directions.get(i);
                         if (!visitedGrids.contains(newNeighbor)) {
                             var newState = new PuzzleState(currentState, newNeighbor, direction);
                             stack.push(newState);
@@ -47,5 +49,6 @@ public class IterativeDeepeningSearch extends SearchAlgorithm {
             }
             depth++;
         }
+        return Optional.empty();
     }
 }

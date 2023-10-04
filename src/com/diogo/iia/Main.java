@@ -13,9 +13,9 @@ public class Main {
 
         Grid base = new Grid(sampleInput);
 
-        var searchHeuristic = new GreedyBestFirstSearch(base);
+        var searchHeuristic = new HillClimbing(base);
 
-        var solution = searchHeuristic.solve(false);
+        var solution = searchHeuristic.solve();
         System.out.println(solution);
         searchHeuristic.showRunInfo();
 

@@ -3,6 +3,7 @@ package com.diogo.iia.heuristics;
 import com.diogo.iia.application.Grid;
 import com.diogo.iia.application.PuzzleState;
 import com.diogo.iia.application.SearchAlgorithm;
+import com.diogo.iia.models.Direction;
 
 import java.util.*;
 
@@ -34,7 +35,7 @@ public class BFS extends SearchAlgorithm {
 
 
             // Add unvisited nodes to frontier in possible directions
-            for (Grid.Direction direction : currentState.getPossibleMovements()) {
+            for (Direction direction : currentState.getPossibleMovements()) {
                 var currentGrid = currentState.getGrid();
                 Grid newGrid = Grid.move(currentGrid, direction);
 

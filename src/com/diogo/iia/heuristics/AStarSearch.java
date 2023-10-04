@@ -1,6 +1,8 @@
 package com.diogo.iia.heuristics;
 
 import com.diogo.iia.application.*;
+import com.diogo.iia.models.Direction;
+import com.diogo.iia.models.DistanceHeuristics;
 
 import java.util.*;
 
@@ -11,13 +13,13 @@ public class AStarSearch extends SearchAlgorithm {
     }
 
     public Optional<PuzzleState> solve() throws Exception {
-        var defaultHeuristic = PuzzleState.DistanceHeuristics.MANHATTAN;
+        var defaultHeuristic = DistanceHeuristics.MANHATTAN;
 
         return solve(defaultHeuristic);
     }
 
 
-    public Optional<PuzzleState> solve(PuzzleState.DistanceHeuristics distanceHeuristic) throws Exception {
+    public Optional<PuzzleState> solve(DistanceHeuristics distanceHeuristic) throws Exception {
         //A Star uses the sum of the distance to solution and the distance heuristic as the priority
         PriorityQueue<PuzzleState> priorityQueue =
                 new PriorityQueue<>(Comparator.comparingInt(node ->
@@ -44,7 +46,7 @@ public class AStarSearch extends SearchAlgorithm {
 
             for (int i = 0; i < neighbors.size(); i++) {
                 Grid newNeighbor = neighbors.get(i);
-                Grid.Direction direction = directions.get(i);
+                Direction direction = directions.get(i);
                 if (!visitedGrids.contains(newNeighbor)) {
                     var newState = new PuzzleState(currentState, newNeighbor, direction);
                     newState.setCost(currentState.getCost() + 1);
