@@ -3,28 +3,37 @@ package com.diogo.iia.application;
 import com.diogo.iia.models.Direction;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 public class PuzzleHistory {
-    private List<PuzzleState> history = new ArrayList<>();
+    private PuzzleState last;
+    private long nodesVisited = 0;
+    private long timeStart = 0;
+    private long timeElapsed = 0;
+
+    public PuzzleHistory() {
+        this.startTime();
+    }
+
+
+    public long getTimeElapsed() {
+        return timeElapsed;
+    }
 
     public void store(PuzzleState state) {
-        history.add(state);
+        this.last = state;
+        nodesVisited++;
     }
 
-    public void printGrids() {
-        for (int i = 0; i < history.size(); i++) {
-            var current = history.get(i);
-            var lastMovement = "None";
-            var movements = current.getPreviousMovements();
-            if (!movements.isEmpty()) {
-                lastMovement = movements.get(movements.size() - 1).toString();
-            }
-            System.out.printf("Grid %d. Movement: %s\n", i, lastMovement);
-            current.getGrid().display();
-
-        }
+    private void startTime() {
+        this.timeStart = System.nanoTime();
     }
+
+    public void endTime() {
+        this.timeElapsed = System.nanoTime() - this.timeStart;
+    }
+
 
     public String formatMovements() {
         StringBuilder movementList = new StringBuilder();
@@ -37,22 +46,20 @@ public class PuzzleHistory {
     }
 
     public List<Direction> getMovements() {
-        return this.getLastState().getPreviousMovements();
+        return this.last.getPreviousMovements();
     }
 
-    public List<Grid> getSolutionPath() throws Exception {
 
-        var moves = this.getLastState().getPreviousMovements();
-        var startingGrid = history.get(0).getGrid();
-        var gridEvolution = new ArrayList<Grid>();
-        gridEvolution.add(startingGrid);
-        for (var movement : moves) {
-            var last = gridEvolution.get(gridEvolution.size() - 1);
-            var nextMove = Grid.move(last, movement);
-            gridEvolution.add(nextMove);
+    public List<Grid> getSolutionPath() throws Exception {
+        List<Grid> path = new ArrayList<>();
+
+        // Traverse the "linked list" of movements to retrieve the grid
+        for (PuzzleState state = this.last; state != null; state = state.getPredecessor()) {
+            path.add(state.getGrid());
         }
 
-        return gridEvolution;
+        Collections.reverse(path);  // Since we want the path from start to goal, not goal to start
+        return path;
     }
 
     public void printSolutionPath() throws Exception {
@@ -64,17 +71,12 @@ public class PuzzleHistory {
         System.out.println("______________________");
     }
 
-    public List<PuzzleState> getHistory() {
-        return history;
+    public PuzzleState getLast() {
+        return last;
     }
 
-    public PuzzleState getLastState() {
-        var index = history.size() - 1;
-        if (index < 0) {
-            System.out.println("Alerta! Index menor que zero");
-            index = 0;
-        }
-        return history.get(index);
+    public long getNodesVisited() {
+        return this.nodesVisited;
     }
 
 

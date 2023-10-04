@@ -1,11 +1,14 @@
 package com.diogo.iia.application;
 
+import com.diogo.iia.models.RunInfo;
+
 import java.util.Optional;
 
 public abstract class SearchAlgorithm {
     protected PuzzleHistory history;
 
     protected PuzzleState initialStart;
+
 
     public SearchAlgorithm(Grid start) {
         this.history = new PuzzleHistory();
@@ -24,43 +27,39 @@ public abstract class SearchAlgorithm {
 
     // Check if the grid is the goal state
     protected boolean isGoal(PuzzleState current) {
-
         return current.getCost() == 0;
-
-        /*
-        int[][] goal = {
-                {1, 2, 3},
-                {4, 5, 6},
-                {7, 8, 0}
-        };
-
-        var grid = candidateGrid.getGrid();
-        for (int i = 0; i < 3; i++) {
-            for (int j = 0; j < 3; j++) {
-                if (grid[i][j] != goal[i][j]) {
-                    return false;
-                }
-            }
-        }
-        return true;*/
     }
 
+    public RunInfo showRunInfo() throws Exception {
+        return this.showRunInfo(false);
+    }
 
-    public void showRunInfo() throws Exception {
+    public RunInfo showRunInfo(boolean showSolution) throws Exception {
 
-        System.out.println("Starting grid: ");
+        // Stop memory usage and time
+        this.history.endTime();
 
-        this.initialStart.getGrid().display();
-
-        var historySteps = this.history.getHistory();
-        System.out.printf("Solution took %d steps.\n", historySteps.size());
+        long timeElapsed = this.history.getTimeElapsed();
 
 
-        System.out.printf("Steps taken in solution: %s \n", this.history.formatMovements());
-        System.out.println(this.history.getMovements().size());
-        //System.out.println("All grids: ");
-        //this.history.printGrids();
-        this.history.printSolutionPath();
+        var nodesVisited = this.history.getNodesVisited();
+        var movesToSolution = this.history.getMovements().size();
+        if (showSolution) {
+            System.out.println("Starting grid: ");
+
+            this.initialStart.getGrid().display();
+
+            System.out.printf("Solution visited %d nodes and took %d ms.\n", nodesVisited, timeElapsed);
+
+
+            System.out.printf("Steps taken in solution: %s \n", this.history.formatMovements());
+            System.out.println(movesToSolution);
+            //System.out.println("All grids: ");
+            //this.history.printGrids();
+            this.history.printSolutionPath();
+        }
+
+        return new RunInfo(nodesVisited, movesToSolution, this.history, timeElapsed);
 
     }
 }

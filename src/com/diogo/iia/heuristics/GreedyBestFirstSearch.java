@@ -8,20 +8,24 @@ import java.util.*;
 
 public class GreedyBestFirstSearch extends SearchAlgorithm {
 
-    public GreedyBestFirstSearch(Grid start) {
+    private boolean useCost;
+
+    public GreedyBestFirstSearch(Grid start, boolean useCost) {
         super(start);
+        this.useCost = useCost;
+    }
+
+    public GreedyBestFirstSearch(Grid start) {
+        this(start, false);
     }
 
     @Override
     public Optional<PuzzleState> solve() throws Exception {
-        return solve(false);
-    }
-
-    public Optional<PuzzleState> solve(boolean useCost) throws Exception {
 
         Comparator<PuzzleState> comparator;
 
-        if (useCost) {
+        if (this.useCost) {
+            // Its the same thing as using the Correctness distance, but this is faster
             comparator = Comparator.comparingInt(PuzzleState::getCost);
         } else {
             comparator = Comparator.comparingInt(ps -> ps.calculateDistanceHeuristic(DistanceHeuristics.MANHATTAN));

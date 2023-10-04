@@ -18,10 +18,10 @@ public enum DistanceHeuristics {
     CORRECTNESS {
         @Override
         public double distance(int dx, int dy) {
-            if (dx == 0 || dy == 0) {
-                return 1.0;
-            } else {
+            if (dx == 0 && dy == 0) {
                 return 0.0;
+            } else {
+                return 1.0;
             }
         }
     };

@@ -245,8 +245,10 @@ public class Grid {
     }
 
     public Position findPosition(int value) {
+        var retrived = goalPositions.get(value);
+
         return Optional
-                .ofNullable(goalPositions.get(value))
+                .ofNullable(retrived)
                 .orElseThrow(() -> new IllegalArgumentException("Value not found in the grid."));
     }
 

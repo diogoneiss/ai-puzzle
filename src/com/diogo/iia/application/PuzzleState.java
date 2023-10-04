@@ -30,6 +30,13 @@ public class PuzzleState {
         this.cost = computeGridCorrectness();
     }
 
+    public PuzzleState(Grid predecessorGrid, List<Direction> predecessorMovements) {
+        this.grid = predecessorGrid;
+        this.possibleMovements = this.calculatePossibleMovements();
+        this.previousMovements = predecessorMovements;
+        this.cost = computeGridCorrectness();
+    }
+
     public List<Direction> getPossibleMovements() {
         return possibleMovements;
     }
@@ -113,4 +120,19 @@ public class PuzzleState {
     }
 
 
+    public PuzzleState getPredecessor() throws Exception {
+        if (this.previousMovements == null || this.previousMovements.isEmpty()) {
+            return null;  // No predecessor if there are no previous moves
+        }
+
+        Direction lastMove = this.previousMovements.get(this.previousMovements.size() - 1);
+        Direction oppositeOfLastMove = lastMove.getOpposite();
+
+        Grid predecessorGrid = Grid.move(this.getGrid(), oppositeOfLastMove);
+
+        // We will copy all movements excluding the last one to create the predecessor PuzzleState
+        List<Direction> predecessorMovements = new ArrayList<>(this.previousMovements.subList(0, this.previousMovements.size() - 1));
+
+        return new PuzzleState(predecessorGrid, predecessorMovements);
+    }
 }

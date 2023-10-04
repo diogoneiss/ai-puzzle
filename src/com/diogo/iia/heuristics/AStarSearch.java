@@ -7,23 +7,23 @@ import com.diogo.iia.models.DistanceHeuristics;
 import java.util.*;
 
 public class AStarSearch extends SearchAlgorithm {
+    private DistanceHeuristics distanceHeuristic;
 
     public AStarSearch(Grid start) {
+        this(start, DistanceHeuristics.MANHATTAN);
+    }
+
+    public AStarSearch(Grid start, DistanceHeuristics heuristic) {
         super(start);
+        this.distanceHeuristic = heuristic;
     }
 
+    @Override
     public Optional<PuzzleState> solve() throws Exception {
-        var defaultHeuristic = DistanceHeuristics.MANHATTAN;
-
-        return solve(defaultHeuristic);
-    }
-
-
-    public Optional<PuzzleState> solve(DistanceHeuristics distanceHeuristic) throws Exception {
         //A Star uses the sum of the distance to solution and the distance heuristic as the priority
         PriorityQueue<PuzzleState> priorityQueue =
                 new PriorityQueue<>(Comparator.comparingInt(node ->
-                        node.calculateDistanceHeuristic(distanceHeuristic) + node.getDepth()
+                        node.calculateDistanceHeuristic(this.distanceHeuristic) + node.getDepth()
                 ));
 
         Set<Grid> visitedGrids = new HashSet<>();
