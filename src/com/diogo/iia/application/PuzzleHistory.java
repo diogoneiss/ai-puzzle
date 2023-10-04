@@ -1,4 +1,4 @@
-package com.diogo.iia.Main;
+package com.diogo.iia.application;
 
 import java.util.ArrayList;
 import java.util.List;

@@ -1,8 +1,8 @@
-package com.diogo.iia.Main;// Press Shift twice to open the Search Everywhere dialog and type `show whitespaces`,
+package com.diogo.iia;// Press Shift twice to open the Search Everywhere dialog and type `show whitespaces`,
 // then press Enter. You can now see whitespace characters in your code.
 
-import com.diogo.iia.Heuristics.BFS;
-import com.diogo.iia.Heuristics.UniformSearch;
+import com.diogo.iia.application.Grid;
+import com.diogo.iia.heuristics.*;
 
 public class Main {
     public static void main(String[] args) throws Exception {
@@ -13,9 +13,9 @@ public class Main {
 
         Grid base = new Grid(sampleInput);
 
-        var searchHeuristic = new UniformSearch(base);
+        var searchHeuristic = new GreedyBestFirstSearch(base);
 
-        var solution = searchHeuristic.solve();
+        var solution = searchHeuristic.solve(false);
         System.out.println(solution);
         searchHeuristic.showRunInfo();
 

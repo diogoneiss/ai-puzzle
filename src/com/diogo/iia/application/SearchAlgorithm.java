@@ -1,4 +1,4 @@
-package com.diogo.iia.Main;
+package com.diogo.iia.application;
 
 import java.util.Optional;
 
@@ -25,7 +25,7 @@ public abstract class SearchAlgorithm {
     // Check if the grid is the goal state
     protected boolean isGoal(PuzzleState current) {
 
-        return current.getDistanceToSolution() == 0;
+        return current.getCost() == 0;
 
         /*
         int[][] goal = {

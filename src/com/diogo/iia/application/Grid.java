@@ -1,48 +1,32 @@
-package com.diogo.iia.Main;
+package com.diogo.iia.application;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import java.util.*;
 
 public class Grid {
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        Grid grid1 = (Grid) o;
-        return blankX == grid1.blankX && blankY == grid1.blankY && hash == grid1.hash && Arrays.equals(grid, grid1.grid);
+    // As the grid target positions are fixed, I only need to compute them once.
+    private static final Map<Integer, Position> goalPositions = new HashMap<>();
+
+    static {
+        int[][] goal = {
+                {1, 2, 3},
+                {4, 5, 6},
+                {7, 8, 0}
+        };
+
+        for (int i = 0; i < goal.length; i++) {
+            for (int j = 0; j < goal[i].length; j++) {
+                goalPositions.put(goal[i][j], new Position(i, j));
+            }
+        }
     }
 
+    public int hash;
     private int[][] grid;
     private int blankX, blankY;
-    public int hash;
 
-    public int[][] getGrid() {
-        return grid;
-    }
-
-    public void setGrid(int[][] grid) {
-        this.grid = grid;
-    }
-
-    public int getBlankX() {
-        return blankX;
-    }
-
-    public void setBlankX(int blankX) {
-        this.blankX = blankX;
-    }
-
-    public int getBlankY() {
-        return blankY;
-    }
-
-    public void setBlankY(int blankY) {
-        this.blankY = blankY;
-    }
 
     // Constructor for two-dimensional array
-    public Grid(int[][] twoDimArray) throws Exception  {
+    public Grid(int[][] twoDimArray) throws Exception {
         this.grid = twoDimArray;
         //TODO check length of matrix
         for (int i = 0; i < 3; i++) {
@@ -59,12 +43,8 @@ public class Grid {
     }
 
     // Constructor for single-dimensional array
-    public Grid(int[] singleDimArray) throws Exception  {
+    public Grid(int[] singleDimArray) throws Exception {
         this(convertArrayDimentions(singleDimArray));
-    }
-
-    public enum Direction {
-        UP, DOWN, LEFT, RIGHT
     }
 
     public static List<Direction> possibleSwaps(int blankX, int blankY) {
@@ -77,22 +57,7 @@ public class Grid {
 
         return possibleDirections;
     }
-    public List<Direction> possibleSwaps() {
-        return Grid.possibleSwaps(this.blankX, this.blankY);
-    }
 
-    public Grid copy() {
-        int[][] newGrid = new int[3][3];
-        for (int i = 0; i < 3; i++) {
-            System.arraycopy(this.grid[i], 0, newGrid[i], 0, 3);
-        }
-
-        try {
-            return new Grid(newGrid);
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
-    }
     public static Grid move(Grid original, Direction direction) throws Exception {
         Grid swappedGrid = original.copy();
 
@@ -136,10 +101,58 @@ public class Grid {
         }
         return twoDimArray;
     }
+/*
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Grid grid1 = (Grid) o;
+        return blankX == grid1.blankX && blankY == grid1.blankY && hash == grid1.hash && Arrays.equals(grid, grid1.grid);
+    }*/
+
+    public int[][] getGrid() {
+        return grid;
+    }
+
+    public void setGrid(int[][] grid) {
+        this.grid = grid;
+    }
+
+    public int getBlankX() {
+        return blankX;
+    }
+
+    public void setBlankX(int blankX) {
+        this.blankX = blankX;
+    }
+
+    public int getBlankY() {
+        return blankY;
+    }
+
+    public void setBlankY(int blankY) {
+        this.blankY = blankY;
+    }
+
+    public List<Direction> possibleSwaps() {
+        return Grid.possibleSwaps(this.blankX, this.blankY);
+    }
+
+    public Grid copy() {
+        int[][] newGrid = new int[3][3];
+        for (int i = 0; i < 3; i++) {
+            System.arraycopy(this.grid[i], 0, newGrid[i], 0, 3);
+        }
+
+        try {
+            return new Grid(newGrid);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
 
     // Display method to print the current state of the puzzle
-    public void display()
-    {
+    public void display() {
         StringBuilder renderedGrid = new StringBuilder();
         for (int i = 0; i < 3; i++) {
             for (int j = 0; j < 3; j++) {
@@ -153,13 +166,14 @@ public class Grid {
         }
         System.out.println(renderedGrid);
     }
+
     @Override
     public String toString() {
         StringBuilder renderedGrid = new StringBuilder();
         for (int i = 0; i < 3; i++) {
             for (int j = 0; j < 3; j++) {
                 if (i == blankX && j == blankY) {
-                   renderedGrid.append("_");
+                    renderedGrid.append("_");
                 } else {
                     renderedGrid.append(grid[i][j]);
                 }
@@ -168,17 +182,22 @@ public class Grid {
         return renderedGrid.toString();
 
     }
+
     private void checkBlankFound() throws Exception {
         if (grid[blankX][blankY] != 0) {
             throw new Exception("Blank space not found in the provided grid.");
         }
     }
 
-    @Override
-    public int hashCode() {
-        return this.computeGridHash();
-    }
+    /*
+        @Override
+        public int hashCode() {
+            return this.computeGridHash();
+        }
+    */
     public int computeGridHash() {
+        return Arrays.deepHashCode(this.grid);
+        /*
         StringBuilder gridString = new StringBuilder(9);
 
         for (int i = 0; i < 3; i++) {
@@ -191,7 +210,24 @@ public class Grid {
             }
         }
 
-        return gridString.toString().hashCode();
+        return gridString.toString().hashCode();*/
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null || getClass() != obj.getClass()) {
+            return false;
+        }
+        Grid other = (Grid) obj;
+        return Arrays.deepEquals(this.grid, other.grid);
+    }
+
+    @Override
+    public int hashCode() {
+        return Arrays.deepHashCode(this.grid);
     }
 
     public List<Grid> getNeighbors() throws Exception {
@@ -203,6 +239,28 @@ public class Grid {
 
         }
         return neighbors;
+    }
+
+    public Position findPosition(int value) {
+        return Optional
+                .ofNullable(goalPositions.get(value))
+                .orElseThrow(() -> new IllegalArgumentException("Value not found in the grid."));
+    }
+
+    public int findCorrectXPosition(int value) {
+        return findPosition(value).x;
+    }
+
+    public int findCorrectYPosition(int value) {
+        return findPosition(value).y;
+
+    }
+
+    public enum Direction {
+        UP, DOWN, LEFT, RIGHT
+    }
+
+    public record Position(int x, int y) {
     }
 
 
