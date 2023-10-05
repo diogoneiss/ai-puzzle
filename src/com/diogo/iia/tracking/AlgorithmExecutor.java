@@ -1,6 +1,7 @@
 package com.diogo.iia.tracking;
 
 import com.diogo.iia.AlgorithmFactory;
+import com.diogo.iia.Inputs.CsvHandler;
 import com.diogo.iia.Inputs.PuzzleReader;
 import com.diogo.iia.application.Grid;
 import com.diogo.iia.application.PuzzleState;
@@ -17,13 +18,24 @@ import java.util.Optional;
 
 public class AlgorithmExecutor {
 
-    private static String CSV_FILE_NAME = "results.csv";
 
     public static void executeAndSave() throws Exception {
         var statistics = computeMetrics();
-        System.out.println("Saving results to " + CSV_FILE_NAME);
-        writeCsv(statistics);
+        System.out.println("Saving results to " + CsvHandler.CSV_FILE_NAME);
+        CsvHandler.writeCsv(statistics);
     }
+
+    public static void getMissingEntries(List<AlgorithmStatistics> statistics) throws FileNotFoundException {
+        var algorithmTypes = AlgorithmFactory.algorithmTypes;
+
+        // TODO: Load the existing CSV file and remove the parameter
+
+
+        // TODO: Check colisions and remove the previous entry from the list
+
+
+    }
+
 
     public static List<AlgorithmStatistics> computeMetrics() throws Exception {
         boolean useSlice = false;
@@ -48,7 +60,8 @@ public class AlgorithmExecutor {
         int gridIndex = 0;
         for (Grid grid : grids) {
             for (String algorithmType : algorithmTypes) {
-                System.out.print("Executing " + algorithmType + " for the " + gridIndex + "th grid. ");
+                String gridHash = grid.toString();
+                System.out.print("Executing " + algorithmType + " for the " + gridIndex + "th grid, " + gridHash);
                 SearchAlgorithm algorithm = AlgorithmFactory.createAlgorithm(algorithmType, grid);
 
                 Optional<PuzzleState> solution = algorithm.solve();
@@ -70,10 +83,9 @@ public class AlgorithmExecutor {
 
                 solutionGap = Math.round(solutionGap * 100.0) / 100.0;
 
-
                 var statistics = new AlgorithmStatistics(
                         algorithmType,
-                        gridIndex,
+                        gridHash,
                         solutionInfo.nodesVisited(),
                         solutionInfo.movements(),
                         correctSolution,
@@ -89,17 +101,5 @@ public class AlgorithmExecutor {
         return List.copyOf(results);
     }
 
-
-    private static void writeCsv(List<AlgorithmStatistics> statistics) throws FileNotFoundException {
-        File csvOutputFile = new File(CSV_FILE_NAME);
-        try (PrintWriter pw = new PrintWriter(csvOutputFile)) {
-            pw.println(AlgorithmStatistics.csvHeader());
-
-            statistics.stream()
-                    .map(s -> s.toCsv())
-                    .forEach(pw::println);
-        }
-
-    }
 
 }

@@ -8,7 +8,7 @@ import java.util.stream.Stream;
 
 public record AlgorithmStatistics(
         String algorithmName,
-        int gridNumber,
+        String gridHash,
         long nodesVisited,
         int movementsTaken,
         int correctSolution,

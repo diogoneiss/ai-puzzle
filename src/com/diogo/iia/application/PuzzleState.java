@@ -132,7 +132,7 @@ public class PuzzleState {
 
     public PuzzleState getPredecessor() throws Exception {
         if (this.previousMovements == null || this.previousMovements.isEmpty()) {
-            return null;  // No predecessor if there are no previous moves
+            return null;
         }
 
         Direction lastMove = this.previousMovements.get(this.previousMovements.size() - 1);
