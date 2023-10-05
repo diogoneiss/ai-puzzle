@@ -1,7 +1,7 @@
 package com.diogo.iia.models;
 
 public enum AlgorithmType {
-    B, I, U, A, A2, G, G2, H, HR, HS1, HS2, HS3, R;
+    B, I, I1, U, A, A1, A2, G, G1, H, HR, HS1, HS2, HS3, R;
 
     public static AlgorithmType fromString(String str) {
         try {

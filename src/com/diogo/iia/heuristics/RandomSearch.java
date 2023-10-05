@@ -16,38 +16,51 @@ public class RandomSearch extends SearchAlgorithm {
 
     @Override
     public Optional<PuzzleState> solve() throws Exception {
-        Set<Integer> visitedOrFrontier = new HashSet<>();
-        Set<Grid> visitedGrids = new HashSet<>();
+        Set<String> visitedOrFrontier = new HashSet<>();
 
-        List<PuzzleState> list = new ArrayList<>(); // Random access support
+        Deque<PuzzleState> list = new ArrayDeque<>();
+
+        boolean allowRepetition = false;
 
         list.add(this.initialStart);
 
         while (!list.isEmpty()) {
-            // Randomly select a state to explore
-            int randomIndex = ThreadLocalRandom.current().nextInt(list.size());
-            PuzzleState currentState = list.remove(randomIndex);
+            PuzzleState currentState = list.pop();
             history.store(currentState);
 
-            // If this state is the goal state, return the grid
             if (this.isGoal(currentState)) {
                 return Optional.of(currentState);
             }
 
-            // Add unvisited nodes to frontier in possible directions
-            for (Direction direction : currentState.getPossibleMovements()) {
-                var currentGrid = currentState.getGrid();
-                Grid newGrid = Grid.move(currentGrid, direction);
+            // Get possible unvisited neighbors to choose from
+            List<PuzzleState> unvisitedNeighbors = new ArrayList<>();
 
-                if (!visitedOrFrontier.contains(newGrid.hash) || true) {
-                    PuzzleState newState = new PuzzleState(currentState, newGrid, direction);
-                    list.add(newState);  // Adding to the frontier
-                    visitedOrFrontier.add(newGrid.hash);
-                    visitedGrids.add(newGrid);
+            var neighbors = currentState.getGrid().getNeighbors();
+            var directions = currentState.getPossibleMovements();
+
+            int i = 0;
+
+            // Add unvisited neighbors to a list
+            for (var neightborGrid : neighbors) {
+
+                if (!visitedOrFrontier.contains(neightborGrid.toString())) {
+                    PuzzleState newState = new PuzzleState(currentState, neightborGrid, directions.get(i));
+                    unvisitedNeighbors.add(newState);
+                    if (!allowRepetition) {
+                        visitedOrFrontier.add(neightborGrid.toString());
+                    }
                 }
+            }
+
+            // Pick the next state randomly among the neighbors
+            if (!unvisitedNeighbors.isEmpty()) {
+                int randomIndex = ThreadLocalRandom.current().nextInt(unvisitedNeighbors.size());
+                PuzzleState randomNeighbor = unvisitedNeighbors.get(randomIndex);
+                list.add(randomNeighbor);
             }
         }
 
         return Optional.empty();
     }
+
 }

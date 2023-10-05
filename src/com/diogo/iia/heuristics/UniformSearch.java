@@ -15,8 +15,12 @@ public class UniformSearch extends SearchAlgorithm {
 
     @Override
     public Optional<PuzzleState> solve() throws Exception {
-        PriorityQueue<PuzzleState> priorityQueue = new PriorityQueue<>(Comparator.comparingInt(PuzzleState::getCost));
-        Set<Grid> visitedGrids = new HashSet<>();
+        PriorityQueue<PuzzleState> priorityQueue = new PriorityQueue<>(Comparator.comparingInt(PuzzleState::getDepth));
+
+        //Set<Grid> visitedGrids = new HashSet<>();
+        // List<Integer> bestCosts = new ArrayList<>();
+        // Its more efficient to use a HashMap to store the visited grids and their costs than a HashSet and an ArrayList
+        HashMap<String, Integer> visitedGridCosts = new HashMap<>();
 
         priorityQueue.add(initialStart);
 
@@ -24,23 +28,34 @@ public class UniformSearch extends SearchAlgorithm {
             PuzzleState currentState = priorityQueue.poll();
             history.store(currentState);
 
-            assert currentState != null;
-
             if (this.isGoal(currentState)) {
                 return Optional.of(currentState);
             }
 
-            visitedGrids.add(currentState.getGrid());
+            // Mark popped node as visited
+            visitedGridCosts.put(currentState.getGrid().toString(), currentState.getDepth());
 
             var neighbors = currentState.getGrid().getNeighbors();
             var directions = currentState.getPossibleMovements();
 
             for (int i = 0; i < neighbors.size(); i++) {
                 Grid newNeighbor = neighbors.get(i);
+                String newNeighborHash = newNeighbor.toString();
                 Direction direction = directions.get(i);
-                if (!visitedGrids.contains(newNeighbor)) {
-                    var newState = new PuzzleState(currentState, newNeighbor, direction);
+                var newState = new PuzzleState(currentState, newNeighbor, direction);
+
+                // Check if key is in the HashMap
+                if (!visitedGridCosts.containsKey(newNeighborHash)) {
                     priorityQueue.add(newState);
+                } else {
+
+                    var previousCost = visitedGridCosts.get(newNeighborHash);
+                    var newCost = currentState.getDepth();
+                    //Replace if the new cost is better
+                    if (previousCost > newCost) {
+                        priorityQueue.add(newState);
+                        visitedGridCosts.put(currentState.getGrid().toString(), currentState.getDepth());
+                    }
                 }
             }
         }

@@ -2,6 +2,7 @@ package com.diogo.iia.models;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -9,7 +10,7 @@ public record AlgorithmStatistics(
         String algorithmName,
         int gridNumber,
         long nodesVisited,
-        int movements,
+        int movementsTaken,
         int correctSolution,
         double solutionGap,
         long timeElapsed

@@ -23,12 +23,14 @@ public class AlgorithmFactory {
 
         return switch (algorithmType) {
             case B -> new BFS(start);
-            case I -> new IterativeDeepeningSearch(start);
+            case I -> new IterativeDeepeningSearch(start, false);
+            case I1 -> new IterativeDeepeningSearch(start, true);
             case U -> new UniformSearch(start);
-            case A -> new AStarSearch(start);
-            case A2 -> new AStarSearch(start, DistanceHeuristics.EUCLIDEAN);
+            case A -> new AStarSearch(start, DistanceHeuristics.MANHATTAN);
+            case A1 -> new AStarSearch(start, DistanceHeuristics.EUCLIDEAN);
+            case A2 -> new AStarSearch(start, DistanceHeuristics.CORRECTNESS);
             case G -> new GreedyBestFirstSearch(start, true);
-            case G2 -> new GreedyBestFirstSearch(start, false);
+            case G1 -> new GreedyBestFirstSearch(start, false);
             case H -> new HillClimbing(start, HillClimbingOptions.REGULAR, DistanceHeuristics.MANHATTAN);
             case HR -> new HillClimbing(start, HillClimbingOptions.STOCHASTIC, DistanceHeuristics.MANHATTAN);
             case HS1 -> new HillClimbing(start, HillClimbingOptions.SIMULATED_ANNEALING, DistanceHeuristics.MANHATTAN);

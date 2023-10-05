@@ -25,14 +25,13 @@ public class GreedyBestFirstSearch extends SearchAlgorithm {
         Comparator<PuzzleState> comparator;
 
         if (this.useCost) {
-            // Its the same thing as using the Correctness distance, but this is faster
-            comparator = Comparator.comparingInt(PuzzleState::getCost);
+            comparator = Comparator.comparingInt(PuzzleState::getDepth);
         } else {
             comparator = Comparator.comparingInt(ps -> ps.calculateDistanceHeuristic(DistanceHeuristics.MANHATTAN));
         }
 
         PriorityQueue<PuzzleState> priorityQueue = new PriorityQueue<>(comparator);
-        Set<Grid> visitedGrids = new HashSet<>();
+        Set<String> visitedGrids = new HashSet<>();
 
         priorityQueue.add(initialStart);
 
@@ -46,7 +45,7 @@ public class GreedyBestFirstSearch extends SearchAlgorithm {
                 return Optional.of(currentState);
             }
 
-            visitedGrids.add(currentState.getGrid());
+            visitedGrids.add(currentState.getGrid().toString());
 
             var neighbors = currentState.getGrid().getNeighbors();
             var directions = currentState.getPossibleMovements();
@@ -54,7 +53,7 @@ public class GreedyBestFirstSearch extends SearchAlgorithm {
             for (int i = 0; i < neighbors.size(); i++) {
                 Grid newNeighbor = neighbors.get(i);
                 Direction direction = directions.get(i);
-                if (!visitedGrids.contains(newNeighbor)) {
+                if (!visitedGrids.contains(newNeighbor.toString())) {
                     var newState = new PuzzleState(currentState, newNeighbor, direction);
                     priorityQueue.add(newState);
                 }

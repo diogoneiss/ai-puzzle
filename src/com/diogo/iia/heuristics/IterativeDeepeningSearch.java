@@ -9,9 +9,17 @@ import java.util.*;
 
 public class IterativeDeepeningSearch extends SearchAlgorithm {
 
-    public IterativeDeepeningSearch(Grid start) {
+    private boolean allowRepetition;
+
+    public IterativeDeepeningSearch(Grid start, boolean allowRepetition) {
         super(start);
+        this.allowRepetition = allowRepetition;
     }
+
+    public IterativeDeepeningSearch(Grid start) {
+        this(start, false);
+    }
+
 
     @Override
     public Optional<PuzzleState> solve() throws Exception {
@@ -32,7 +40,9 @@ public class IterativeDeepeningSearch extends SearchAlgorithm {
                 }
 
                 if (currentState.getDepth() < depth) {
-                    visitedGrids.add(currentState.getGrid());
+                    if (!allowRepetition) {
+                        visitedGrids.add(currentState.getGrid());
+                    }
 
                     var neighbors = currentState.getGrid().getNeighbors();
                     var directions = currentState.getPossibleMovements();
@@ -40,6 +50,8 @@ public class IterativeDeepeningSearch extends SearchAlgorithm {
                     for (int i = 0; i < neighbors.size(); i++) {
                         Grid newNeighbor = neighbors.get(i);
                         Direction direction = directions.get(i);
+
+                        // If repetition is allowed, the Set wont contain any grid
                         if (!visitedGrids.contains(newNeighbor)) {
                             var newState = new PuzzleState(currentState, newNeighbor, direction);
                             stack.push(newState);

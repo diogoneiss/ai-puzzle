@@ -8,6 +8,8 @@ import java.util.List;
 
 public class PuzzleHistory {
     private PuzzleState last;
+
+
     private long nodesVisited = 0;
     private long timeStart = 0;
     private long timeElapsed = 0;
@@ -15,7 +17,6 @@ public class PuzzleHistory {
     public PuzzleHistory() {
         this.startTime();
     }
-
 
     public long getTimeElapsed() {
         return timeElapsed;

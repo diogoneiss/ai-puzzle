@@ -16,8 +16,7 @@ public class BFS extends SearchAlgorithm {
 
     @Override
     public Optional<PuzzleState> solve() throws Exception {
-        Set<Integer> visitedOrFrontier = new HashSet<>();
-        Set<Grid> visitedGrids = new HashSet<>();
+        Set<String> visitedOrFrontier = new HashSet<>();
 
         Queue<PuzzleState> queue = new LinkedList<>();
 
@@ -28,23 +27,36 @@ public class BFS extends SearchAlgorithm {
             history.store(currentState);
 
             // If this state is the goal state, return the grid
-            // uses the distance to solution as a heuristic
+            // uses the distance to  solution as a heuristic
             if (this.isGoal(currentState)) {
                 return Optional.of(currentState);
             }
-
 
             // Add unvisited nodes to frontier in possible directions
             for (Direction direction : currentState.getPossibleMovements()) {
                 var currentGrid = currentState.getGrid();
                 Grid newGrid = Grid.move(currentGrid, direction);
-
-                if (!visitedOrFrontier.contains(newGrid.hash)) {
+                String gridHash = newGrid.toString();
+                if (!visitedOrFrontier.contains(gridHash)) {
                     PuzzleState newState = new PuzzleState(currentState, newGrid, direction);
+                    if (this.isGoal(newState)) {
+                        history.store(newState);
+                        return Optional.of(newState);
+                    }
                     queue.add(newState);
-                    visitedOrFrontier.add(newGrid.hash);
-                    visitedGrids.add(newGrid);
-                }
+                    visitedOrFrontier.add(gridHash);
+                } /*else {
+                    var indiceHash = new ArrayList<>(visitedOrFrontier).indexOf(newGrid.hash);
+                    var indiceGrid = new ArrayList<>(visitedGrids).indexOf(newGrid);
+
+                    assert indiceHash == indiceGrid;
+
+                    var originalStr = new ArrayList<>(visitedGrids).get(indiceGrid).toString();
+                    var currentStr = newGrid.toString();
+
+                    assert originalStr.equals(currentStr);
+
+                }*/
                 /*
                 else {
                     var indice = new ArrayList<>(visitedOrFrontier).indexOf(newGrid.hash);

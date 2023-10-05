@@ -12,12 +12,12 @@ public class Main {
         // IntelliJ IDEA suggests fixing it.
         //int[] sampleInput = { 1, 2, 3, 4, 0, 5, 7, 8, 6};
 
-        boolean executeAll = false;
+        boolean executeSingleAlgorithm = false;
         var gridList = PuzzleReader.readPuzzlesFromCSV();
         int testCaseIndex = 0;
         int desiredCase = 4;
 
-        if (!executeAll) {
+        if (executeSingleAlgorithm) {
             for (var grid : gridList) {
 
                 testCaseIndex++;

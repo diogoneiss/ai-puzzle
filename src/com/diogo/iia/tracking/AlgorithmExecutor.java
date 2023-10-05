@@ -26,7 +26,12 @@ public class AlgorithmExecutor {
     }
 
     public static List<AlgorithmStatistics> computeMetrics() throws Exception {
-        var inputs = PuzzleReader.readPuzzlesFromCSV().subList(0, 10);
+        boolean useSlice = false;
+        var inputs = PuzzleReader.readPuzzlesFromCSV();
+
+        if (useSlice) {
+            inputs = inputs.subList(0, 25);
+        }
 
         List<Grid> grids = new ArrayList<>();
         List<Integer> solutions = new ArrayList<>();
@@ -37,28 +42,39 @@ public class AlgorithmExecutor {
         }
 
         var algorithmTypes = AlgorithmFactory.algorithmTypes;
+        algorithmTypes.remove(algorithmTypes.indexOf("I1"));
         var results = new ArrayList<AlgorithmStatistics>();
 
         int gridIndex = 0;
         for (Grid grid : grids) {
             for (String algorithmType : algorithmTypes) {
-                System.out.println("Executing " + algorithmType + " for the " + gridIndex + "th grid.");
+                System.out.print("Executing " + algorithmType + " for the " + gridIndex + "th grid. ");
                 SearchAlgorithm algorithm = AlgorithmFactory.createAlgorithm(algorithmType, grid);
+
                 Optional<PuzzleState> solution = algorithm.solve();
                 RunInfo solutionInfo = algorithm.showRunInfo();
+                double timeSeconds = solutionInfo.timeElapsed() / 1_000_000_000.0;
+
+                System.out.printf("Took %.4f seconds.%n", timeSeconds);
+
                 int correctSolution = solutions.get(gridIndex);
+                long movementsTaken = solutionInfo.movements();
                 double solutionGap;
-                long nodesVisited = solutionInfo.nodesVisited();
+
                 if (correctSolution != 0) {
-                    solutionGap = (nodesVisited - correctSolution) / (double) correctSolution;
+                    // Gap = | y' - y | / y
+                    solutionGap = Math.abs(movementsTaken - correctSolution) / (double) correctSolution;
                 } else {
                     solutionGap = 0;
                 }
 
+                solutionGap = Math.round(solutionGap * 100.0) / 100.0;
+
+
                 var statistics = new AlgorithmStatistics(
                         algorithmType,
                         gridIndex,
-                        nodesVisited,
+                        solutionInfo.nodesVisited(),
                         solutionInfo.movements(),
                         correctSolution,
                         solutionGap,

@@ -27,7 +27,7 @@ public abstract class SearchAlgorithm {
 
     // Check if the grid is the goal state
     protected boolean isGoal(PuzzleState current) {
-        return current.getCost() == 0;
+        return current.getCorrectTiles() == 0;
     }
 
     public RunInfo showRunInfo() throws Exception {

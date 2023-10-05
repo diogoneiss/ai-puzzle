@@ -26,7 +26,7 @@ public class AStarSearch extends SearchAlgorithm {
                         node.calculateDistanceHeuristic(this.distanceHeuristic) + node.getDepth()
                 ));
 
-        Set<Grid> visitedGrids = new HashSet<>();
+        Set<String> visitedGrids = new HashSet<>();
 
         priorityQueue.add(initialStart);
 
@@ -39,7 +39,7 @@ public class AStarSearch extends SearchAlgorithm {
                 return Optional.of(currentState);
             }
 
-            visitedGrids.add(currentState.getGrid());
+            visitedGrids.add(currentState.getGrid().toString());
 
             var neighbors = currentState.getGrid().getNeighbors();
             var directions = currentState.getPossibleMovements();
@@ -47,9 +47,9 @@ public class AStarSearch extends SearchAlgorithm {
             for (int i = 0; i < neighbors.size(); i++) {
                 Grid newNeighbor = neighbors.get(i);
                 Direction direction = directions.get(i);
-                if (!visitedGrids.contains(newNeighbor)) {
+                if (!visitedGrids.contains(newNeighbor.toString())) {
                     var newState = new PuzzleState(currentState, newNeighbor, direction);
-                    newState.setCost(currentState.getCost() + 1);
+                    newState.increaseCost();
                     priorityQueue.add(newState);
                 }
             }

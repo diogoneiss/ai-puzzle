@@ -10,14 +10,18 @@ public class PuzzleState {
     private Grid grid;
     private List<Direction> previousMovements;
     private List<Direction> possibleMovements;
-    private int cost;
+    private int correctTiles;
+
+    private int cost = 0;
+
 
     // Constructor for the first state
     public PuzzleState(Grid initialGrid) {
         this.grid = initialGrid;
         this.possibleMovements = this.calculatePossibleMovements();
         this.previousMovements = new ArrayList<Direction>();
-        this.cost = computeGridCorrectness();
+        this.correctTiles = computeGridCorrectness();
+        this.cost = 0;
     }
 
     // Constructor with previous PuzzleState, grid, and direction
@@ -27,14 +31,16 @@ public class PuzzleState {
         this.previousMovements = new ArrayList<>(prevState.getPreviousMovements());
         this.previousMovements.add(direction);
 
-        this.cost = computeGridCorrectness();
+        this.correctTiles = computeGridCorrectness();
+        this.cost = this.previousMovements.size();
+
     }
 
     public PuzzleState(Grid predecessorGrid, List<Direction> predecessorMovements) {
         this.grid = predecessorGrid;
         this.possibleMovements = this.calculatePossibleMovements();
         this.previousMovements = predecessorMovements;
-        this.cost = computeGridCorrectness();
+        this.correctTiles = computeGridCorrectness();
     }
 
     public List<Direction> getPossibleMovements() {
@@ -62,6 +68,10 @@ public class PuzzleState {
             throw new IllegalArgumentException("Cannot safely convert " + distance + " to int.");
         }
         return (int) Math.ceil(distance);
+    }
+
+    public void increaseCost() {
+        this.cost++;
     }
 
     private int computeGridCorrectness() {
@@ -98,20 +108,20 @@ public class PuzzleState {
     }
 
     public int getDepth() {
-        var previous = this.previousMovements;
-        return previous.size();
-    }
-
-    public int getCost() {
+        var movementsSize = this.previousMovements.size();
+        assert movementsSize <= this.cost;
         return this.cost;
-
     }
 
-    public void setCost(int cost) {
-        if (cost < 0) {
+    public int getCorrectTiles() {
+        return this.correctTiles;
+    }
+
+    public void setCorrectTiles(int correctTiles) {
+        if (correctTiles < 0) {
             throw new IllegalArgumentException("Cost for a given state cannot be < 0");
         }
-        this.cost = cost;
+        this.correctTiles = correctTiles;
     }
 
     public List<Direction> calculatePossibleMovements() {
