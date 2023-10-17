@@ -9,6 +9,8 @@ Para visualizar o código e rodar, basta abrir em sua IDE de preferência (estou
 verificar as configurações de compilador do projeto, certificando-se de estar na versão correta do java, e criar uma configuração de execução
 com target na classe Main.java.
 
+No Intellij, você precisará configurar o JDK do projeto e criar uma run config no canto superior direito, para rodar a classe main.
+
 Depois configure os argumentos de linha de comando para passar os parâmetros desejados
 
 ---------------

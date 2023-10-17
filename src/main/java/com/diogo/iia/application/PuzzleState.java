@@ -79,26 +79,6 @@ public class PuzzleState {
         return calculateDistanceHeuristic(heuristic);
     }
 
-
-        /*int distance = 0;
-
-        int[][] goal = {
-                {1, 2, 3},
-                {4, 5, 6},
-                {7, 8, 0}
-        };
-
-        var gridMatrix = this.grid.getGrid();
-        for (int i = 0; i < 3; i++) {
-            for (int j = 0; j < 3; j++) {
-                if (gridMatrix[i][j] != goal[i][j]) {
-                    distance++;
-                }
-            }
-        }
-        return distance;/*
-    }*/
-
     public Grid getGrid() {
         return grid;
     }
@@ -128,7 +108,6 @@ public class PuzzleState {
         return Grid.possibleSwaps(this.grid.getBlankX(), this.grid.getBlankY());
 
     }
-
 
     public PuzzleState getPredecessor() throws Exception {
         if (this.previousMovements == null || this.previousMovements.isEmpty()) {
