@@ -12,6 +12,7 @@ import com.diogo.iia.models.AlgorithmStatistics;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 
 public class AlgorithmExecutor {
@@ -43,21 +44,26 @@ public class AlgorithmExecutor {
         }
 
         var algorithmTypes = AlgorithmFactory.algorithmTypes;
-        algorithmTypes.remove(algorithmTypes.indexOf("I1"));
+        //algorithmTypes.remove(algorithmTypes.indexOf("I1"));
         var results = new ArrayList<AlgorithmStatistics>();
 
         int gridIndex = 0;
         for (Grid grid : grids) {
             for (String algorithmType : algorithmTypes) {
+                if (Objects.equals(algorithmType, "I1") && gridIndex >19 ){
+                    System.out.println("Skipping iterative deepening, it'll take too long");
+                    continue;
+                }
                 String gridHash = grid.toString();
-                System.out.print("Executing " + algorithmType + " for the " + gridIndex + "th grid, " + gridHash);
+                System.out.println("Executing " + algorithmType + " for the " + gridIndex + "th grid, " + gridHash);
                 SearchAlgorithm algorithm = AlgorithmFactory.createAlgorithm(algorithmType, grid);
 
                 Optional<PuzzleState> solution = algorithm.solve();
+                System.out.println("Solution: ");
                 RunInfo solutionInfo = algorithm.showRunInfo();
                 double timeSeconds = solutionInfo.timeElapsed() / 1_000_000_000.0;
 
-                System.out.printf("Took %.4f seconds.%n", timeSeconds);
+                System.out.printf("\nTook %.4f seconds.\n", timeSeconds);
 
                 int correctSolution = solutions.get(gridIndex);
                 long movementsTaken = solutionInfo.movements();
